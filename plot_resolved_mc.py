@@ -18,9 +18,9 @@ def find_bounding_rect(image):
 anisotropy = [1, 1, 10]
 # cache_folder = '/mnt/localdata01/jhennies/neuraldata/results/multicut_workflow/170321_splB_z1/cache/'
 # cache_folder = '/mnt/localdata01/jhennies/neuraldata/results/multicut_workflow/170224_test/cache/'
-cache_folder = '/media/julian/Daten/datasets/results/multicut_workflow/170328_test/cache/'
+cache_folder = '/mnt/localdata01/jhennies/neuraldata/results/multicut_workflow/170329_test_pipeline_update/cache/'
 
-resolve_id = 15.0
+resolve_id = 161.0
 
 # Load paths
 with open(cache_folder + 'path_data/resolve_paths_{}.pkl'.format(resolve_id), mode='r') as f:
@@ -34,7 +34,7 @@ segmentation = vigra.readHDF5(cache_folder + '../result.h5', 'z/1/test')
 segmentation[segmentation != resolve_id] = 0
 
 # Load corrected segmentation
-segm_resolved = vigra.readHDF5(cache_folder + '../result_resolved.h5', 'z/1/test')
+segm_resolved = vigra.readHDF5(cache_folder + '../result_resolved_thresh_0.5.h5', 'z/1/test')
 segm_resolved[segmentation != resolve_id] = 0
 
 # Load gt
@@ -47,7 +47,7 @@ segm_resolved[segmentation != resolve_id] = 0
 #     'z/1/neuron_ids'
 # )
 gt = vigra.readHDF5(
-    '/media/julian/Daten/datasets/cremi_2016/resolve_merges/cremi.splB.raw_neurons.crop.axes_xyz.crop_x100-612_y100-612.split_z.h5',
+    '/mnt/localdata01/jhennies/neuraldata/cremi_2016/resolve_merges/cremi.splB.raw_neurons.crop.axes_xyz.crop_x100-612_y100-612.split_z.h5',
     'z/1/neuron_ids'
 )
 
@@ -63,7 +63,7 @@ for l in gt_labels:
     t_gt_image[t_gt_image == l] = 0
 gt[t_gt_image > 0] = 0
 t_gt_image = None
-gt, _, _ = vigra.analysis.relabelConsecutive(gt, start_label=0, keep_zeros=False)
+gt, _, _ = vigra.analysis.relabelConsecutive(gt, start_label=0)
 # gt = remove_small_segments(gt)
 
 # Crop all images
@@ -132,12 +132,6 @@ nsp.plot_multiple_paths_with_mean_class(
 nsp.start_figure()
 nsp.add_iso_surfaces(segmentation, anisotropy=anisotropy, colormap='Spectral',
                      vmin=np.unique(segmentation)[1], vmax=np.unique(segmentation)[-1])
-# nsp.plot_multiple_paths_with_mean_class(
-#     paths, path_weights,
-#     custom_lut=lut,
-#     anisotropy=anisotropy,
-#     vmin=path_vmin, vmax=path_vmax
-# )
 nsp.add_path(np.swapaxes(
     paths[-1], 0, 1), s=[path_weights[-1]] * path.shape[0], anisotropy=anisotropy,
     vmin=path_vmin, vmax=path_vmax, custom_lut=lut
@@ -152,20 +146,16 @@ nsp.add_path(np.swapaxes(
 #     anisotropy=anisotropy
 # )
 
-# Resolved segmentation
-nsp.start_figure()
-nsp.add_iso_surfaces(segm_resolved, anisotropy=anisotropy, colormap='Spectral',
-                     vmin=np.unique(segm_resolved)[1], vmax=np.unique(segm_resolved)[-1])
-# nsp.add_path(np.swapaxes(
-#     paths[-1], 0, 1), s=[path_weights[-1]] * path.shape[0], anisotropy=anisotropy,
-#     vmin=path_vmin, vmax=path_vmax, custom_lut=lut
+# # Resolved segmentation
+# nsp.start_figure()
+# nsp.add_iso_surfaces(segm_resolved, anisotropy=anisotropy, colormap='Spectral',
+#                      vmin=np.unique(segm_resolved)[1], vmax=np.unique(segm_resolved)[-1])
+# nsp.plot_multiple_paths_with_mean_class(
+#     paths, path_weights,
+#     custom_lut=lut,
+#     anisotropy=anisotropy,
+#     vmin=path_vmin, vmax=path_vmax
 # )
-nsp.plot_multiple_paths_with_mean_class(
-    paths, path_weights,
-    custom_lut=lut,
-    anisotropy=anisotropy,
-    vmin=path_vmin, vmax=path_vmax
-)
 
 nsp.show()
 
