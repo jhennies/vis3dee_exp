@@ -43,10 +43,10 @@ gt = vigra.readHDF5(
 
 
 
-id = eval_data[0.5]['merged_split'][30]
+id = eval_data[0.5]['merged_split'][1]
 print 'ID = {}'.format(id)
 
-number_of_objects_to_plot = 2
+number_of_objects_to_plot = 5
 
 # id = 101.0
 # path_to_obj = paths_to_objs[id]
