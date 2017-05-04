@@ -146,16 +146,16 @@ nsp.add_path(np.swapaxes(
 #     anisotropy=anisotropy
 # )
 
-# # Resolved segmentation
-# nsp.start_figure()
-# nsp.add_iso_surfaces(segm_resolved, anisotropy=anisotropy, colormap='Spectral',
-#                      vmin=np.unique(segm_resolved)[1], vmax=np.unique(segm_resolved)[-1])
-# nsp.plot_multiple_paths_with_mean_class(
-#     paths, path_weights,
-#     custom_lut=lut,
-#     anisotropy=anisotropy,
-#     vmin=path_vmin, vmax=path_vmax
-# )
+# Resolved segmentation
+nsp.start_figure()
+nsp.add_iso_surfaces(segm_resolved, anisotropy=anisotropy, colormap='Spectral',
+                     vmin=np.unique(segm_resolved)[1], vmax=np.unique(segm_resolved)[-1])
+nsp.plot_multiple_paths_with_mean_class(
+    paths, path_weights,
+    custom_lut=lut,
+    anisotropy=anisotropy,
+    vmin=path_vmin, vmax=path_vmax
+)
 
 nsp.show()
 

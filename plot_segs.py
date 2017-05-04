@@ -40,10 +40,13 @@ gt = vigra.readHDF5(
     '/mnt/localdata02/jhennies/neuraldata/cremi_2016/170321_resolve_false_merges/cremi.splB.train.raw_neurons_defect_correct.crop.axes_xyz.split_z.h5',
     'z/1/neuron_ids'
 )
+print 'Loading raw data...'
+raw = vigra.readHDF5(
+    '/mnt/localdata02/jhennies/neuraldata/cremi_2016/170321_resolve_false_merges/cremi.splB.train.raw_neurons_defect_correct.crop.axes_xyz.split_z.h5',
+    'z/1/raw'
+)
 
-
-
-id = eval_data[0.5]['merged_split'][1]
+id = eval_data[0.5]['not_merged_not_split'][1]
 print 'ID = {}'.format(id)
 
 number_of_objects_to_plot = 5
@@ -58,11 +61,13 @@ mask = seg != id
 seg[mask] = 0
 newseg[mask] = 0
 gt[mask] = 0
+# raw[mask] = 0
 
 crop = find_bounding_rect(seg)
 seg = seg[crop]
 newseg = newseg[crop]
 gt = gt[crop]
+raw = raw[crop]
 
 print seg.shape
 
@@ -102,15 +107,18 @@ print 'Starting to plot...'
 
 nsp.start_figure()
 
+seg[seg > 0] = 1
+
 # nsp.add_path(paths[id].swapaxes(0, 1), anisotropy=[1, 1, 10])
-nsp.add_iso_surfaces(seg, anisotropy=[1, 1, 10], vmin=0, vmax=np.amax(seg), opacity=0.5)
+nsp.add_iso_surfaces(seg, anisotropy=[1, 1, 10], vmin=0, vmax=3, opacity=0.8)
+# nsp.add_xyz_planes(raw, anisotropy=[1, 1, 10])
+#
+# nsp.start_figure()
+#
+# nsp.add_iso_surfaces(newseg, anisotropy=[1, 1, 10], vmin=0, vmax=np.amax(newseg), opacity=0.5)
 
-nsp.start_figure()
-
-nsp.add_iso_surfaces(newseg, anisotropy=[1, 1, 10], vmin=0, vmax=np.amax(newseg), opacity=0.5)
-
-nsp.start_figure()
-
-nsp.add_iso_surfaces(gt, anisotropy=[1, 1, 10], vmin=0, vmax=np.amax(gt), opacity=0.5)
+# nsp.start_figure()
+#
+# nsp.add_iso_surfaces(gt, anisotropy=[1, 1, 10], vmin=0, vmax=np.amax(gt), opacity=0.5)
 nsp.show()
 
